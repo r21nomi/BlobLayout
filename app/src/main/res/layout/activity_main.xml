@@ -3,20 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout-->
-    <!--android:id="@+id/frm_mask_animated"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--app:mask="@drawable/masking_masking_01"-->
-    <!--app:porterduffxfermode="DST_IN">-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:scaleType="centerCrop"-->
-    <!--android:src="@drawable/img" />-->
-    <!--</com.christophesmet.android.views.maskableframelayout.MaskableFrameLayout>-->
-
     <com.r21nomi.blobtransition.MaskLayout
         android:id="@+id/maskLayout"
         android:layout_width="200dp"

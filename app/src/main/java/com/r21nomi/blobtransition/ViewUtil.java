@@ -1,10 +1,8 @@
 package com.r21nomi.blobtransition;
 
 import android.app.Activity;
-import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 /**
  * Created by Ryota Niinomi on 2016/11/13.
@@ -24,10 +22,10 @@ public class ViewUtil {
         view.setLayoutParams(param);
     }
 
-    public static int getStatusBarHeight(Activity activity) {
-        Rect rect = new Rect();
-        Window window = activity.getWindow();
-        window.getDecorView().getWindowVisibleDisplayFrame(rect);
-        return rect.top;
+    public static float calcurateWithoutToolbar(Activity activity, float value) {
+        int statusBarHeight = WindowUtil.getStatusBarHeight(activity);
+        int toolbarHeight = activity.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+
+        return value - statusBarHeight - toolbarHeight;
     }
 }

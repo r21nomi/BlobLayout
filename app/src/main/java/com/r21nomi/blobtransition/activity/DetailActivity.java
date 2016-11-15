@@ -47,26 +47,29 @@ public class DetailActivity extends AppCompatActivity {
             public boolean onPreDraw() {
                 maskLayout.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                int statusBarHeight = ViewUtil.getStatusBarHeight(DetailActivity.this);
-                int toolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-
+                float top = ViewUtil.calcurateWithoutToolbar(DetailActivity.this, position.getTop());
                 maskLayout.setTranslationX(position.getLeft());
-                maskLayout.setTranslationY(position.getTop() - statusBarHeight - toolbarHeight);
+                maskLayout.setTranslationY(top);
 
-                startAnimation();
+                startEnterAnimation();
                 return true;
             }
         });
     }
 
-    private void startAnimation() {
+    @Override
+    public void onBackPressed() {
+        startExitAnimation();
+    }
+
+    private void startEnterAnimation() {
         int targetWidth = WindowUtil.getWidth(this);
         int targetHeight = targetWidth * position.getWidth() / position.getHeight();
 
         AnimatorSet animSet = new AnimatorSet();
 
         animSet.playTogether(
-                maskLayout.getAnimator(),
+                maskLayout.getEnterAnimator(),
                 ObjectAnimator.ofFloat(maskLayout, "translationX", 0),
                 ObjectAnimator.ofFloat(maskLayout, "translationY", 0),
                 ValueAnimator.ofObject(new WidthEvaluator(maskLayout), position.getWidth(), targetWidth),
@@ -77,6 +80,32 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
                 super.onAnimationEnd(animation);
+            }
+        });
+        animSet.setDuration(500);
+        animSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animSet.start();
+    }
+
+    private void startExitAnimation() {
+        float top = ViewUtil.calcurateWithoutToolbar(DetailActivity.this, position.getTop());
+        AnimatorSet animSet = new AnimatorSet();
+
+        animSet.playTogether(
+                maskLayout.getExitAnimator(),
+                ObjectAnimator.ofFloat(maskLayout, "translationX", position.getLeft()),
+                ObjectAnimator.ofFloat(maskLayout, "translationY", top),
+                ValueAnimator.ofObject(new WidthEvaluator(maskLayout), maskLayout.getWidth(), position.getWidth()),
+                ValueAnimator.ofObject(new HeightEvaluator(maskLayout), maskLayout.getHeight(), position.getHeight())
+        );
+
+        animSet.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                super.onAnimationEnd(animation);
+                DetailActivity.super.onBackPressed();
+                overridePendingTransition(0, 0);
             }
         });
         animSet.setDuration(500);
