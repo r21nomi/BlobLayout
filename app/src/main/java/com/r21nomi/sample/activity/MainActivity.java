@@ -1,18 +1,24 @@
 package com.r21nomi.sample.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.r21nomi.blobtransition.BlobLayout;
 import com.r21nomi.sample.Item;
 import com.r21nomi.sample.ItemAdapter;
 import com.r21nomi.sample.R;
 import com.r21nomi.sample.ResourceUtil;
+import com.r21nomi.sample.ViewUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,16 +32,19 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         ItemAdapter adapter = new ItemAdapter(getDataSet(), new ItemAdapter.Listener() {
             @Override
-            public void onClick(View blobLayout, Item item) {
+            public void onClick(BlobLayout blobLayout, Item item) {
                 Intent intent = DetailActivity.createIntent(MainActivity.this, blobLayout);
-                // Fade activity background if over LOLLIPOP.
-                Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        MainActivity.this,
-                        blobLayout,
-                        ""
-                ).toBundle();
-                startActivity(intent, options);
-                overridePendingTransition(0, 0);
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                    // Fade activity background if over LOLLIPOP.
+                    Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            MainActivity.this,
+                            getPair()
+                    ).toBundle();
+                    startActivity(intent, options);
+                } else {
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
+                }
             }
         });
 
@@ -59,5 +68,24 @@ public class MainActivity extends AppCompatActivity {
                 new Item("Item 5", "description 5", ResourceUtil.getDrawableAsUri(this, R.drawable.img)),
                 new Item("Item 6", "description 6", ResourceUtil.getDrawableAsUri(this, R.drawable.img))
         );
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private Pair[] getPair() {
+        View statusBar = findViewById(android.R.id.statusBarBackground);
+        View navigationBar = findViewById(android.R.id.navigationBarBackground);
+        View actionBar = ViewUtil.getActionBar(this);
+
+        List<Pair<View, String>> pairs = new ArrayList<>();
+        if (statusBar != null) {
+            pairs.add(Pair.create(statusBar, statusBar.getTransitionName()));
+        }
+        if (navigationBar != null) {
+            pairs.add(Pair.create(navigationBar, navigationBar.getTransitionName()));
+        }
+        if (actionBar != null) {
+            pairs.add(Pair.create(actionBar, actionBar.getTransitionName()));
+        }
+        return pairs.toArray(new Pair[pairs.size()]);
     }
 }

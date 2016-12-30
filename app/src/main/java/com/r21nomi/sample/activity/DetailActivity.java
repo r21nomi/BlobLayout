@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -22,14 +21,16 @@ import com.r21nomi.sample.WindowUtil;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String POSITION = "position";
+    private static final String NOISE = "noise";
     private static final int DURARION = 500;
 
     private BlobLayout blobLayout;
     private Position position;
 
-    public static Intent createIntent(Context context, View sharedElement) {
+    public static Intent createIntent(Context context, BlobLayout sharedElement) {
         Intent intent = new Intent(context, DetailActivity.class);
         intent.putExtra(POSITION, new Position(sharedElement));
+        intent.putExtra(NOISE, sharedElement.getNoise());
 
         return intent;
     }
@@ -41,6 +42,7 @@ public class DetailActivity extends AppCompatActivity {
 
         position = getIntent().getParcelableExtra(POSITION);
         blobLayout = (BlobLayout) findViewById(R.id.maskLayout);
+        blobLayout.setNoise(getIntent().getFloatExtra(NOISE, 0));
 
         ViewUtil.transform(blobLayout, position.getWidth(), position.getHeight());
         blobLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -70,7 +72,7 @@ public class DetailActivity extends AppCompatActivity {
 
         AnimatorSet animSet = new AnimatorSet();
         animSet.playTogether(
-                blobLayout.getEnterAnimator(),
+                blobLayout.getToRectAnimator(),
                 // Use translationX / translationY to translate to relative position.
                 ObjectAnimator.ofFloat(blobLayout, "translationX", 0),
                 ObjectAnimator.ofFloat(blobLayout, "translationY", 0),
@@ -93,7 +95,7 @@ public class DetailActivity extends AppCompatActivity {
 
         AnimatorSet animSet = new AnimatorSet();
         animSet.playTogether(
-                blobLayout.getExitAnimator(),
+                blobLayout.getToCircleAnimator(),
                 // Use x / y to set absolute position.
                 ObjectAnimator.ofFloat(blobLayout, "x", position.getLeft()),
                 ObjectAnimator.ofFloat(blobLayout, "y", top),

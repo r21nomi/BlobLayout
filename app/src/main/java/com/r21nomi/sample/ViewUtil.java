@@ -1,6 +1,7 @@
 package com.r21nomi.sample;
 
 import android.app.Activity;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -27,5 +28,14 @@ public class ViewUtil {
         int toolbarHeight = activity.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
 
         return value - statusBarHeight - toolbarHeight;
+    }
+
+    public static View getActionBar(Activity activity) {
+        View decor = activity.getWindow().getDecorView();
+        int actionBarId = R.id.action_bar_container;
+        View actionBar = decor.findViewById(actionBarId);
+        ViewCompat.setTransitionName(actionBar, "action_bar");
+
+        return actionBar;
     }
 }

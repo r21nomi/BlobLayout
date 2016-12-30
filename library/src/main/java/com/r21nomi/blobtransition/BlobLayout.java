@@ -26,6 +26,7 @@ public class BlobLayout extends FrameLayout {
     private float offsetX = 0;
     private float offsetY = 0;
     private float velocity = 0;
+    private float angleStep;
     private ValueAnimator valueAnimator;
     private boolean initialized;
     private List<Point> points = new ArrayList<>();
@@ -33,8 +34,8 @@ public class BlobLayout extends FrameLayout {
     private float noise;
 
     private enum State {
-        ENTER,
-        EXIT,
+        RECT,
+        CIRCLE,
         NONE
     }
 
@@ -49,9 +50,10 @@ public class BlobLayout extends FrameLayout {
     public BlobLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.BlobLayout);
-
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BlobLayout);
+        angleStep = typedArray.getInteger(R.styleable.BlobLayout_angleStep, 20);
         noise = typedArray.getFloat(R.styleable.BlobLayout_noise, 0);
+        typedArray.recycle();
     }
 
     @Override
@@ -88,11 +90,11 @@ public class BlobLayout extends FrameLayout {
         }
 
         switch (currentState) {
-            case ENTER:
+            case RECT:
                 initRectangle();
                 break;
 
-            case EXIT:
+            case CIRCLE:
                 initCircle();
                 break;
         }
@@ -106,8 +108,16 @@ public class BlobLayout extends FrameLayout {
                 if (i == 0) {
                     // Move to initial position first.
                     path.moveTo(coordinate.getX(), 0);
+                    path.lineTo(coordinate.getX(), coordinate.getY());
+                } else {
+                    Coordinate lastCoordinate = points.get(i - 1).getCurrentPoint();
+                    path.quadTo(
+                            lastCoordinate.getX(),
+                            lastCoordinate.getY(),
+                            (coordinate.getX() + lastCoordinate.getX()) / 2,
+                            (coordinate.getY() + lastCoordinate.getY()) / 2
+                    );
                 }
-                path.lineTo(coordinate.getX(), coordinate.getY());
 
                 Coordinate initialLocation = point.getInitialPoint();
                 Coordinate targetLocation = point.getTargetPoint();
@@ -137,8 +147,16 @@ public class BlobLayout extends FrameLayout {
                 if (i == 0) {
                     // Move to initial position first.
                     path.moveTo(coordinate.getX(), 0);
+                    path.lineTo(coordinate.getX(), coordinate.getY());
+                } else {
+                    Coordinate lastCoordinate = points.get(i - 1).getCurrentPoint();
+                    path.quadTo(
+                            lastCoordinate.getX(),
+                            lastCoordinate.getY(),
+                            (coordinate.getX() + lastCoordinate.getX()) / 2,
+                            (coordinate.getY() + lastCoordinate.getY()) / 2
+                    );
                 }
-                path.lineTo(coordinate.getX(), coordinate.getY());
 
                 i++;
             }
@@ -150,49 +168,66 @@ public class BlobLayout extends FrameLayout {
         super.dispatchDraw(canvas);
     }
 
-//    private void startEnterAnimation(Position position, int targetWidth, int targetHeight) {
-//
-//        float top = ViewUtil.calcurateWithoutToolbar(this, position.getTop());
-//        // Use setX / setY to set absolute position.
-//        setX(position.getLeft());
-//        setY(top);
-//
-//        AnimatorSet animSet = new AnimatorSet();
-//        animSet.playTogether(
-//                getEnterAnimator(),
-//                // Use translationX / translationY to translate to relative position.
-//                ObjectAnimator.ofFloat(this, "translationX", 0),
-//                ObjectAnimator.ofFloat(this, "translationY", 0),
-//                ValueAnimator.ofObject(new WidthEvaluator(this), position.getWidth(), targetWidth),
-//                ValueAnimator.ofObject(new HeightEvaluator(this), position.getHeight(), targetHeight)
-//        );
-//        animSet.addListener(new android.animation.AnimatorListenerAdapter() {
-//            @Override
-//            public void onAnimationEnd(android.animation.Animator animation) {
-//                super.onAnimationEnd(animation);
-//            }
-//        });
-//        animSet.setDuration(500);
-//        animSet.setInterpolator(new AccelerateDecelerateInterpolator());
-//        animSet.start();
-//    }
-
-    public ValueAnimator getEnterAnimator() {
+    public void animateToRect() {
         if (valueAnimator == null) {
             initAnimation();
         }
-        changeState(State.ENTER);
+        changeState(State.RECT);
+        valueAnimator.start();
+    }
+
+    public void animateToCircle() {
+        if (valueAnimator == null) {
+            initAnimation();
+        }
+        changeState(State.CIRCLE);
+        valueAnimator.start();
+    }
+
+    public void toggleAnimation() {
+        if (currentState == State.RECT) {
+            animateToCircle();
+        } else {
+            animateToRect();
+        }
+    }
+
+    public ValueAnimator getToRectAnimator() {
+        if (valueAnimator == null) {
+            initAnimation();
+        }
+        changeState(State.RECT);
 
         return valueAnimator;
     }
 
-    public ValueAnimator getExitAnimator() {
+    public ValueAnimator getToCircleAnimator() {
         if (valueAnimator == null) {
             initAnimation();
         }
-        changeState(State.EXIT);
+        changeState(State.CIRCLE);
 
         return valueAnimator;
+    }
+
+    public State getState() {
+        return currentState;
+    }
+
+    public float getAngleStep() {
+        return angleStep;
+    }
+
+    public void setAngleStep(float angleStep) {
+        this.angleStep = angleStep;
+    }
+
+    public float getNoise() {
+        return noise;
+    }
+
+    public void setNoise(float noise) {
+        this.noise = noise;
     }
 
     private void changeState(State state) {
@@ -200,8 +235,6 @@ public class BlobLayout extends FrameLayout {
     }
 
     private void initShape() {
-        float angleStep = 1;
-
         points.clear();
 
         for (float angle = 0, len = 360; angle <= len; angle += angleStep) {
@@ -213,7 +246,7 @@ public class BlobLayout extends FrameLayout {
         float angle = 0;
         for (Point point : points) {
             point.setTargetPoint(getCircleCoordinate(angle));
-            angle++;
+            angle += angleStep;
         }
     }
 
@@ -244,7 +277,7 @@ public class BlobLayout extends FrameLayout {
 
             point.setTargetPoint(new Coordinate(targetX, targetY));
 
-            angle++;
+            angle += angleStep;
         }
     }
 
@@ -280,7 +313,6 @@ public class BlobLayout extends FrameLayout {
                     Coordinate currentCoordinate = point.getCurrentPoint();
                     point.setInitialPoint(new Coordinate(currentCoordinate.getX(), currentCoordinate.getY()));
                 }
-                changeState(State.NONE);
             }
         });
     }

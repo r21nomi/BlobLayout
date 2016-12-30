@@ -72,7 +72,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
     public interface Listener {
-        void onClick(View view, Item item);
+        void onClick(BlobLayout view, Item item);
     }
 }
 
