@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -20,7 +21,7 @@ import static java.lang.Math.abs;
  * Created by Ryota Niinomi on 2016/11/10.
  */
 
-public class MaskLayout extends FrameLayout {
+public class BlobLayout extends FrameLayout {
 
     private float offsetX = 0;
     private float offsetY = 0;
@@ -29,6 +30,7 @@ public class MaskLayout extends FrameLayout {
     private boolean initialized;
     private List<Point> points = new ArrayList<>();
     private State currentState = State.NONE;
+    private float noise;
 
     private enum State {
         ENTER,
@@ -36,32 +38,20 @@ public class MaskLayout extends FrameLayout {
         NONE
     }
 
-    public MaskLayout(Context context) {
+    public BlobLayout(Context context) {
         this(context, null);
     }
 
-    public MaskLayout(Context context, AttributeSet attrs) {
+    public BlobLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public MaskLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BlobLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-//        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyle, 0);
-//
-//        mBorderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_civ_border_width, DEFAULT_BORDER_WIDTH);
-//        mBorderColor = a.getColor(R.styleable.CircleImageView_civ_border_color, DEFAULT_BORDER_COLOR);
-//        mBorderOverlay = a.getBoolean(R.styleable.CircleImageView_civ_border_overlay, DEFAULT_BORDER_OVERLAY);
-//        mFillColor = a.getColor(R.styleable.CircleImageView_civ_fill_color, DEFAULT_FILL_COLOR);
-//
-//        a.recycle();
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.BlobLayout);
 
-//        setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startAnimation();
-//            }
-//        });
+        noise = typedArray.getFloat(R.styleable.BlobLayout_noise, 0);
     }
 
     @Override
@@ -160,6 +150,33 @@ public class MaskLayout extends FrameLayout {
         super.dispatchDraw(canvas);
     }
 
+//    private void startEnterAnimation(Position position, int targetWidth, int targetHeight) {
+//
+//        float top = ViewUtil.calcurateWithoutToolbar(this, position.getTop());
+//        // Use setX / setY to set absolute position.
+//        setX(position.getLeft());
+//        setY(top);
+//
+//        AnimatorSet animSet = new AnimatorSet();
+//        animSet.playTogether(
+//                getEnterAnimator(),
+//                // Use translationX / translationY to translate to relative position.
+//                ObjectAnimator.ofFloat(this, "translationX", 0),
+//                ObjectAnimator.ofFloat(this, "translationY", 0),
+//                ValueAnimator.ofObject(new WidthEvaluator(this), position.getWidth(), targetWidth),
+//                ValueAnimator.ofObject(new HeightEvaluator(this), position.getHeight(), targetHeight)
+//        );
+//        animSet.addListener(new android.animation.AnimatorListenerAdapter() {
+//            @Override
+//            public void onAnimationEnd(android.animation.Animator animation) {
+//                super.onAnimationEnd(animation);
+//            }
+//        });
+//        animSet.setDuration(500);
+//        animSet.setInterpolator(new AccelerateDecelerateInterpolator());
+//        animSet.start();
+//    }
+
     public ValueAnimator getEnterAnimator() {
         if (valueAnimator == null) {
             initAnimation();
@@ -236,7 +253,7 @@ public class MaskLayout extends FrameLayout {
         float radian = (float) Math.toRadians(angle);
         float ex = radius * (float) Math.cos(radian);
         float ey = radius * (float) Math.sin(radian);
-        float nr = radius - MathUtil.map(MathUtil.noise(ex * 0.01f + offsetX, ey * 0.01f + offsetY), 0, 1, 1, radius * 0.02f);
+        float nr = noise == 0 ? radius : radius - MathUtil.map(MathUtil.noise(ex * 0.01f + offsetX, ey * 0.01f + offsetY), 0, 1, 1, radius * noise);
         float nx = nr * (float) Math.cos(radian);
         float ny = nr * (float) Math.sin(radian);
 

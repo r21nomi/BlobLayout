@@ -3,9 +3,9 @@ package com.r21nomi.blobtransition;
 /**
  * Created by Ryota Niinomi on 2016/11/11.
  */
-public class MathUtil {
+class MathUtil {
 
-    public static float map(float value, float beforeMin, float beforeMax, float afterMin, float afterMax) {
+    static float map(float value, float beforeMin, float beforeMax, float afterMin, float afterMax) {
         float result = lerp(afterMin, afterMax, normalize(value, beforeMin, beforeMax));
         if (afterMin < afterMax) {
             if (result > afterMax) {
@@ -24,7 +24,7 @@ public class MathUtil {
         return result;
     }
 
-    public static float noise(float x, float y){
+    static float noise(float x, float y){
         return _slang_library_noise2(x,y)*0.5f + 0.5f;
     }
 

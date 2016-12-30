@@ -3,15 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.r21nomi.blobtransition.MaskLayout
-        android:id="@+id/maskLayout"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentBottom="true">
-
-        <com.r21nomi.blobtransition.SquareImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/img" />
-    </com.r21nomi.blobtransition.MaskLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

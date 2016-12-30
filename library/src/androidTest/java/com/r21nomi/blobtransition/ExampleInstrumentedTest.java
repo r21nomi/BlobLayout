@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.r21nomi.blobtransition", appContext.getPackageName());
+        assertEquals("com.r21nomi.blobtransition.test", appContext.getPackageName());
     }
 }

@@ -1,4 +1,4 @@
-package com.r21nomi.blobtransition;
+package com.r21nomi.sample;
 
 import android.app.Activity;
 import android.view.View;

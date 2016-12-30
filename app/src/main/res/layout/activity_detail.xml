@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.r21nomi.blobtransition.MaskLayout
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Title"
+        android:textSize="20sp" />
+
+    <com.r21nomi.blobtransition.BlobLayout
         android:id="@+id/maskLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        app:noise="0">
 
-        <com.r21nomi.blobtransition.SquareImageView
+        <com.r21nomi.sample.SquareImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/img" />
-    </com.r21nomi.blobtransition.MaskLayout>
+    </com.r21nomi.blobtransition.BlobLayout>
 </RelativeLayout>

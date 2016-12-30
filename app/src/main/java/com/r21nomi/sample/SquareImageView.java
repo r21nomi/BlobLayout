@@ -1,4 +1,4 @@
-package com.r21nomi.blobtransition;
+package com.r21nomi.sample;
 
 import android.content.Context;
 import android.util.AttributeSet;

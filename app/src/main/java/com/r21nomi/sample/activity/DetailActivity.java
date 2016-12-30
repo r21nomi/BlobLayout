@@ -1,4 +1,4 @@
-package com.r21nomi.blobtransition.activity;
+package com.r21nomi.sample.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -11,19 +11,20 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.r21nomi.blobtransition.HeightEvaluator;
-import com.r21nomi.blobtransition.MaskLayout;
+import com.r21nomi.blobtransition.BlobLayout;
 import com.r21nomi.blobtransition.Position;
-import com.r21nomi.blobtransition.R;
-import com.r21nomi.blobtransition.ViewUtil;
-import com.r21nomi.blobtransition.WidthEvaluator;
-import com.r21nomi.blobtransition.WindowUtil;
+import com.r21nomi.sample.HeightEvaluator;
+import com.r21nomi.sample.R;
+import com.r21nomi.sample.ViewUtil;
+import com.r21nomi.sample.WidthEvaluator;
+import com.r21nomi.sample.WindowUtil;
 
 public class DetailActivity extends AppCompatActivity {
 
     private static final String POSITION = "position";
+    private static final int DURARION = 500;
 
-    private MaskLayout maskLayout;
+    private BlobLayout blobLayout;
     private Position position;
 
     public static Intent createIntent(Context context, View sharedElement) {
@@ -39,17 +40,13 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         position = getIntent().getParcelableExtra(POSITION);
-        maskLayout = (MaskLayout) findViewById(R.id.maskLayout);
+        blobLayout = (BlobLayout) findViewById(R.id.maskLayout);
 
-        ViewUtil.transform(maskLayout, position.getWidth(), position.getHeight());
-        maskLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        ViewUtil.transform(blobLayout, position.getWidth(), position.getHeight());
+        blobLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                maskLayout.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                float top = ViewUtil.calcurateWithoutToolbar(DetailActivity.this, position.getTop());
-                maskLayout.setTranslationX(position.getLeft());
-                maskLayout.setTranslationY(top);
+                blobLayout.getViewTreeObserver().removeOnPreDrawListener(this);
 
                 startEnterAnimation();
                 return true;
@@ -66,40 +63,43 @@ public class DetailActivity extends AppCompatActivity {
         int targetWidth = WindowUtil.getWidth(this);
         int targetHeight = targetWidth * position.getWidth() / position.getHeight();
 
+        float top = ViewUtil.calcurateWithoutToolbar(this, position.getTop());
+        // Use setX / setY to set absolute position.
+        blobLayout.setX(position.getLeft());
+        blobLayout.setY(top);
+
         AnimatorSet animSet = new AnimatorSet();
-
         animSet.playTogether(
-                maskLayout.getEnterAnimator(),
-                ObjectAnimator.ofFloat(maskLayout, "translationX", 0),
-                ObjectAnimator.ofFloat(maskLayout, "translationY", 0),
-                ValueAnimator.ofObject(new WidthEvaluator(maskLayout), position.getWidth(), targetWidth),
-                ValueAnimator.ofObject(new HeightEvaluator(maskLayout), position.getHeight(), targetHeight)
+                blobLayout.getEnterAnimator(),
+                // Use translationX / translationY to translate to relative position.
+                ObjectAnimator.ofFloat(blobLayout, "translationX", 0),
+                ObjectAnimator.ofFloat(blobLayout, "translationY", 0),
+                ValueAnimator.ofObject(new WidthEvaluator(blobLayout), position.getWidth(), targetWidth),
+                ValueAnimator.ofObject(new HeightEvaluator(blobLayout), position.getHeight(), targetHeight)
         );
-
         animSet.addListener(new android.animation.AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
                 super.onAnimationEnd(animation);
             }
         });
-        animSet.setDuration(500);
+        animSet.setDuration(DURARION);
         animSet.setInterpolator(new AccelerateDecelerateInterpolator());
-
         animSet.start();
     }
 
     private void startExitAnimation() {
-        float top = ViewUtil.calcurateWithoutToolbar(DetailActivity.this, position.getTop());
+        float top = ViewUtil.calcurateWithoutToolbar(this, position.getTop());
+
         AnimatorSet animSet = new AnimatorSet();
-
         animSet.playTogether(
-                maskLayout.getExitAnimator(),
-                ObjectAnimator.ofFloat(maskLayout, "translationX", position.getLeft()),
-                ObjectAnimator.ofFloat(maskLayout, "translationY", top),
-                ValueAnimator.ofObject(new WidthEvaluator(maskLayout), maskLayout.getWidth(), position.getWidth()),
-                ValueAnimator.ofObject(new HeightEvaluator(maskLayout), maskLayout.getHeight(), position.getHeight())
+                blobLayout.getExitAnimator(),
+                // Use x / y to set absolute position.
+                ObjectAnimator.ofFloat(blobLayout, "x", position.getLeft()),
+                ObjectAnimator.ofFloat(blobLayout, "y", top),
+                ValueAnimator.ofObject(new WidthEvaluator(blobLayout), blobLayout.getWidth(), position.getWidth()),
+                ValueAnimator.ofObject(new HeightEvaluator(blobLayout), blobLayout.getHeight(), position.getHeight())
         );
-
         animSet.addListener(new android.animation.AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
@@ -108,9 +108,8 @@ public class DetailActivity extends AppCompatActivity {
                 overridePendingTransition(0, 0);
             }
         });
-        animSet.setDuration(500);
+        animSet.setDuration(DURARION);
         animSet.setInterpolator(new AccelerateDecelerateInterpolator());
-
         animSet.start();
     }
 }

@@ -16,7 +16,9 @@ public class Position implements Parcelable {
     private int bottom;
 
     public Position(View view) {
-        int[] location = ViewUtil.getViewLocation(view);
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
         this.left = location[0];
         this.top = location[1];
         this.right = this.left + view.getWidth();
