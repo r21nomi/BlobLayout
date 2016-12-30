@@ -12,7 +12,7 @@
         android:text="Title"
         android:textSize="20sp" />
 
-    <com.r21nomi.blobtransition.BlobLayout
+    <com.r21nomi.bloblayout.BlobLayout
         android:id="@+id/maskLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,5 +22,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/img" />
-    </com.r21nomi.blobtransition.BlobLayout>
+    </com.r21nomi.bloblayout.BlobLayout>
 </RelativeLayout>

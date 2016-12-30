@@ -11,7 +11,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.r21nomi.blobtransition.BlobLayout;
+import com.r21nomi.bloblayout.BlobLayout;
 import com.r21nomi.sample.Item;
 import com.r21nomi.sample.ItemAdapter;
 import com.r21nomi.sample.R;

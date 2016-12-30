@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.r21nomi.blobtransition.BlobLayout;
+import com.r21nomi.bloblayout.BlobLayout;
 
 import java.util.List;
 

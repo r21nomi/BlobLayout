@@ -1,4 +1,4 @@
-package com.r21nomi.blobtransition;
+package com.r21nomi.bloblayout;
 
 import org.junit.Test;
 

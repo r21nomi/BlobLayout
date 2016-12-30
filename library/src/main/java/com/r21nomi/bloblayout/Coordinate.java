@@ -1,4 +1,4 @@
-package com.r21nomi.blobtransition;
+package com.r21nomi.bloblayout;
 
 /**
  * Created by Ryota Niinomi on 2016/11/12.

@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.r21nomi.blobtransition.BlobLayout;
-import com.r21nomi.blobtransition.Position;
+import com.r21nomi.bloblayout.BlobLayout;
+import com.r21nomi.bloblayout.Position;
 import com.r21nomi.sample.HeightEvaluator;
 import com.r21nomi.sample.R;
 import com.r21nomi.sample.ViewUtil;

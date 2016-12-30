@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <com.r21nomi.blobtransition.BlobLayout
+    <com.r21nomi.bloblayout.BlobLayout
         android:id="@+id/maskLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/img" />
-    </com.r21nomi.blobtransition.BlobLayout>
+    </com.r21nomi.bloblayout.BlobLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
