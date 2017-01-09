@@ -6,6 +6,13 @@ Transform | Shared Element Transition
 ---- | ----
 ![](art/art1.gif) | ![](art/art2.gif)
 
+## Getting Started
+```groovy
+dependencies {
+  compile 'com.github.r21nomi:bloblayout:0.1.2'
+}
+```
+
 ## Usage
 Used in XML.
 ```xml

@@ -6,7 +6,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -70,8 +69,6 @@ public class BlobLayout extends FrameLayout {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
         Path path = new Path();
 
         float centerX = getMeasuredWidth() / 2;
@@ -232,7 +229,7 @@ public class BlobLayout extends FrameLayout {
     private void initShape() {
         points.clear();
 
-        for (float angle = 0, len = 360; angle <= len; angle += angleStep) {
+        for (float angle = 0; angle < 360 + angleStep * 2; angle += angleStep) {
             points.add(new Point(getCircleCoordinate(angle), new Coordinate(0, 0)));
         }
     }

@@ -35,7 +35,7 @@ publish {
     userOrg = 'r21nomi'
     groupId = 'com.github.r21nomi'
     artifactId = 'bloblayout'
-    publishVersion = '0.1.0'
+    publishVersion = '0.1.2'
     desc = 'BlobLayout is custom layout like blob style.'
     website = 'https://github.com/r21nomi/BlobLayout'
 }
