@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 25
@@ -28,4 +29,13 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     testCompile 'junit:junit:4.12'
+}
+
+publish {
+    userOrg = 'r21nomi'
+    groupId = 'com.github.r21nomi'
+    artifactId = 'bloblayout'
+    publishVersion = '0.1.0'
+    desc = 'BlobLayout is custom layout like blob style.'
+    website = 'https://github.com/r21nomi/BlobLayout'
 }
