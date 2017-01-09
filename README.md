@@ -2,6 +2,10 @@
 BlobLayout is custom layout like blob style.
 This layout can be transformed from CIRCLE style to RECT style with animation.
 
+Transform | Shared Element Transition
+---- | ----
+![](art/art1.gif) | ![](art/art2.gif)
+
 ## Usage
 Used in XML.
 ```xml
@@ -73,15 +77,26 @@ private void startEnterAnimation() {
             ValueAnimator.ofObject(new WidthEvaluator(blobLayout), position.getWidth(), targetWidth),
             ValueAnimator.ofObject(new HeightEvaluator(blobLayout), position.getHeight(), targetHeight)
     );
-    animSet.addListener(new android.animation.AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(android.animation.Animator animation) {
-            super.onAnimationEnd(animation);
-        }
-    });
     animSet.setDuration(500);
     animSet.setInterpolator(new AccelerateDecelerateInterpolator());
     animSet.start();
 }
 
+```
+
+## License
+```
+Copyright 2017 Ryota Niinomi (r21nomi)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ```
