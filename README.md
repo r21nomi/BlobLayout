@@ -90,6 +90,7 @@ private void startEnterAnimation() {
 }
 
 ```
+See [sample](app/src/main/java/com/r21nomi/sample/activity/DetailActivity.java).
 
 ## License
 ```
