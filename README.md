@@ -1,4 +1,6 @@
 # BlobLayout
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-BlobLayout-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/5056)
+
 BlobLayout is custom layout like blob style.
 This layout can be transformed from CIRCLE style to RECT style with animation.
 
